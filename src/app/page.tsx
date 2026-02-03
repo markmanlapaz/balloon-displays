@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import {
   Home,
   Search,
@@ -32,14 +33,6 @@ import {
   Navigation,
   BottomNav,
   Hero,
-  Modal,
-  ModalTrigger,
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
-  ModalDescription,
-  ModalBody,
-  ModalFooter,
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -52,7 +45,15 @@ import {
   ToastContainer,
   useToast,
   FeatureCard,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+  ModalDescription,
+  ModalBody,
 } from '@/components/ui';
+import { useCart } from '@/lib/cart';
+import { formatPrice } from '@/lib/utils';
 
 // Balloon products from CSV
 const balloonProducts = [
@@ -128,21 +129,20 @@ const services = [
     description: 'Professional setup of balloon displays at event venue',
     price: 50,
     image: '/images/balloon-setup-service.webp',
-    badge: 'New Display',
     inStock: true,
   },
 ];
 
 const navItems = [
-  { label: 'Products', href: '#products', active: true },
+  { label: 'Products', href: '/products', active: true },
   { label: 'Services', href: '#services' },
-  { label: 'Gallery', href: '#gallery' },
+  { label: 'Gallery', href: '/gallery' },
   { label: 'Contact', href: '#contact' },
 ];
 
 const bottomNavItems = [
   { icon: <Home />, label: 'Home', href: '/', active: true },
-  { icon: <Search />, label: 'Browse', href: '#products' },
+  { icon: <Search />, label: 'Browse', href: '/products' },
   { icon: <Heart />, label: 'Saved', href: '#saved' },
   { icon: <ShoppingBag />, label: 'Cart', href: '#cart', badge: 0 },
   { icon: <User />, label: 'Contact', href: '#contact' },
@@ -172,6 +172,8 @@ const testimonials = [
 export default function BalloonDisplaysHome() {
   const [cartOpen, setCartOpen] = React.useState(false);
   const [cartItems, setCartItems] = React.useState<Array<{ product: typeof balloonProducts[0]; quantity: number }>>([]);
+  const [bookingModalOpen, setBookingModalOpen] = React.useState(false);
+  const [bookingService, setBookingService] = React.useState<typeof services[0] | null>(null);
   const { toasts, toast, removeToast } = useToast();
 
   const addToCart = (product: typeof balloonProducts[0]) => {
@@ -233,12 +235,14 @@ export default function BalloonDisplaysHome() {
               </p>
 
               <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
-                <Button size="xl" className="group">
-                  Browse Products
-                  <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Button size="xl" className="group" asChild>
+                  <Link href="/products">
+                    Browse Products
+                    <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 </Button>
-                <Button variant="outline" size="xl">
-                  Get a Quote
+                <Button variant="outline" size="xl" asChild>
+                  <a href="#contact">Get a Quote</a>
                 </Button>
               </div>
 
@@ -325,9 +329,11 @@ export default function BalloonDisplaysHome() {
                 Balloon Displays & Decorations
               </h2>
             </div>
-            <Button variant="ghost" className="mt-4 md:mt-0">
-              View All Products
-              <ChevronRight className="w-4 h-4 ml-1" />
+            <Button variant="ghost" className="mt-4 md:mt-0" asChild>
+              <Link href="/products">
+                View All Products
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Link>
             </Button>
           </div>
 
@@ -338,6 +344,7 @@ export default function BalloonDisplaysHome() {
                 product={product}
                 onAddToCart={() => addToCart(product)}
                 onQuickView={() => toast.info('Quick view coming soon!')}
+                onClick={() => window.location.href = `/products/${product.id}`}
               />
             ))}
           </div>
@@ -375,7 +382,10 @@ export default function BalloonDisplaysHome() {
                     <CardDescription className="mb-4">{service.description}</CardDescription>
                     <div className="flex items-center justify-between mt-auto">
                       <PriceDisplay price={service.price} size="lg" />
-                      <Button size="sm" onClick={() => addToCart(service)}>
+                      <Button size="sm" onClick={() => {
+                        setBookingService(service);
+                        setBookingModalOpen(true);
+                      }}>
                         Book Now
                       </Button>
                     </div>
@@ -432,11 +442,11 @@ export default function BalloonDisplaysHome() {
             Let's create something magical together. Contact us for a free consultation and custom quote for your upcoming celebration.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="secondary" size="xl" className="bg-white text-botanical-700 hover:bg-cream-100">
-              Get Free Quote
+            <Button variant="secondary" size="xl" className="bg-white text-botanical-700 hover:bg-cream-100" asChild>
+              <a href="#contact">Get Free Quote</a>
             </Button>
-            <Button variant="outline" size="xl" className="border-white text-white hover:bg-white/10">
-              View Gallery
+            <Button variant="outline" size="xl" className="border-white text-white hover:bg-white/10" asChild>
+              <Link href="/gallery">View Gallery</Link>
             </Button>
           </div>
         </div>
@@ -573,9 +583,9 @@ export default function BalloonDisplaysHome() {
             <div>
               <h4 className="font-semibold text-white mb-4">Quick Links</h4>
               <ul className="space-y-3">
-                <li><a href="#products" className="text-cream-300 hover:text-white transition-colors">Products</a></li>
+                <li><Link href="/products" className="text-cream-300 hover:text-white transition-colors">Products</Link></li>
                 <li><a href="#services" className="text-cream-300 hover:text-white transition-colors">Services</a></li>
-                <li><a href="#gallery" className="text-cream-300 hover:text-white transition-colors">Gallery</a></li>
+                <li><Link href="/gallery" className="text-cream-300 hover:text-white transition-colors">Gallery</Link></li>
                 <li><a href="#contact" className="text-cream-300 hover:text-white transition-colors">Contact</a></li>
               </ul>
             </div>
@@ -595,6 +605,119 @@ export default function BalloonDisplaysHome() {
           </div>
         </div>
       </footer>
+
+      {/* Booking Modal */}
+      <Modal open={bookingModalOpen} onOpenChange={(open) => { if (!open) { setBookingModalOpen(false); setBookingService(null); } }}>
+        <ModalContent size="lg">
+          {bookingService && (
+            <>
+              <ModalHeader>
+                <ModalTitle>Book {bookingService.name}</ModalTitle>
+                <ModalDescription>Fill in the details below and we'll confirm your booking</ModalDescription>
+              </ModalHeader>
+              <ModalBody>
+                <form className="space-y-5" onSubmit={(e) => {
+                  e.preventDefault();
+                  setBookingModalOpen(false);
+                  setBookingService(null);
+                  toast.success('Booking request submitted! We\'ll be in touch shortly.');
+                }}>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
+                      <input
+                        type="text"
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
+                        placeholder="John Smith"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
+                      <input
+                        type="tel"
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
+                    <input
+                      type="email"
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
+                      <input
+                        type="date"
+                        required
+                        className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Time</label>
+                      <input
+                        type="time"
+                        className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Type *</label>
+                    <select
+                      required
+                      className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors bg-white"
+                    >
+                      <option value="">Select event type</option>
+                      <option>Birthday Party</option>
+                      <option>Wedding</option>
+                      <option>Corporate Event</option>
+                      <option>Baby Shower</option>
+                      <option>Graduation</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
+                      placeholder="123 Main St, Toronto, ON"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Special Requests</label>
+                    <textarea
+                      rows={3}
+                      className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none"
+                      placeholder="Tell us about any specific requirements..."
+                    />
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-botanical-50 border border-botanical-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-charcoal-600">{bookingService.name}</span>
+                      <span className="font-display font-semibold text-lg text-botanical-700">
+                        ${bookingService.price.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <Button type="submit" size="lg" fullWidth>
+                    Submit Booking Request
+                  </Button>
+                </form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
       {/* Cart Drawer */}
       <Drawer open={cartOpen} onOpenChange={setCartOpen}>
