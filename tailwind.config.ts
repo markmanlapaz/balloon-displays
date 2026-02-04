@@ -140,6 +140,7 @@ const config: Config = {
 
       fontFamily: {
         display: ['var(--font-fraunces)', ...defaultTheme.fontFamily.serif],
+        accent: ['var(--font-bellota)', 'sans-serif'],
         body: ['var(--font-dm-sans)', ...defaultTheme.fontFamily.sans],
         sans: ['var(--font-dm-sans)', ...defaultTheme.fontFamily.sans],
         serif: ['var(--font-fraunces)', ...defaultTheme.fontFamily.serif],

@@ -49,31 +49,39 @@ const ModalContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-1/2 top-1/2 z-modal -translate-x-1/2 -translate-y-1/2',
-        'w-full p-6 bg-white rounded-2xl shadow-2xl',
-        'max-h-[calc(100vh-80px)] overflow-hidden flex flex-col',
-        'data-[state=open]:animate-scale-in data-[state=closed]:animate-scale-out',
+        'fixed inset-0 z-modal overflow-y-auto',
+        'data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out',
         'focus:outline-none',
-        sizeClasses[size],
-        className
       )}
       {...props}
     >
-      {children}
-      {showCloseButton && (
-        <DialogPrimitive.Close
+      <div className="flex min-h-full items-center justify-center p-6">
+        <div
           className={cn(
-            'absolute top-4 right-4 h-8 w-8',
-            'flex items-center justify-center rounded-full',
-            'text-charcoal-400 hover:text-charcoal-600 hover:bg-cream-200',
-            'transition-colors duration-fast',
-            'focus:outline-none focus:ring-2 focus:ring-botanical focus:ring-offset-2'
+            'relative w-full bg-white rounded-2xl shadow-2xl',
+            'max-h-[calc(100vh-80px)] overflow-hidden flex flex-col',
+            'data-[state=open]:animate-scale-in',
+            sizeClasses[size],
+            className
           )}
         >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      )}
+          {children}
+          {showCloseButton && (
+            <DialogPrimitive.Close
+              className={cn(
+                'absolute top-4 right-4 h-8 w-8',
+                'flex items-center justify-center rounded-full',
+                'text-charcoal-400 hover:text-charcoal-600 hover:bg-cream-200',
+                'transition-colors duration-fast',
+                'focus:outline-none focus:ring-2 focus:ring-botanical focus:ring-offset-2'
+              )}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </div>
+      </div>
     </DialogPrimitive.Content>
   </ModalPortal>
 ));
@@ -110,7 +118,7 @@ const ModalTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('font-display font-semibold text-2xl text-charcoal-700', className)}
+    className={cn('font-body font-semibold text-2xl text-charcoal-700', className)}
     {...props}
   />
 ));

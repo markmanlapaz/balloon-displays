@@ -19,6 +19,8 @@ import {
   ChevronRight,
   PartyPopper,
   Truck,
+  ClipboardList,
+  CreditCard,
 } from 'lucide-react';
 
 import {
@@ -116,28 +118,32 @@ const balloonProducts = [
 const services = [
   {
     id: 's1',
-    name: 'Event Balloon Package',
-    description: 'Full event balloon decoration including arches, columns, and garlands',
+    name: 'Birthday Party Decorations',
+    description: 'Complete balloon decoration service for birthday celebrations of all ages',
     price: 350,
+    priceLabel: 'Starting at $350',
     image: '/images/event-balloon-package.webp',
     badge: 'Popular',
     inStock: true,
   },
   {
     id: 's2',
-    name: 'Balloon Setup Service',
-    description: 'Professional setup of balloon displays at event venue',
-    price: 50,
-    image: '/images/balloon-setup-service.webp',
+    name: 'Wedding & Event Decor',
+    description: 'Elegant balloon installations for weddings, corporate events, and more',
+    price: 0,
+    priceLabel: 'Contact for Quote',
+    image: '/images/double-balloon-arch.webp',
     inStock: true,
   },
 ];
 
 const navItems = [
-  { label: 'Products', href: '/products', active: true },
-  { label: 'Services', href: '#services' },
+  { label: 'Products', href: '/products' },
+  { label: 'Services', href: '/services' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About', href: '/about' },
+  { label: 'Request a Quote', href: '/inquiry' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const bottomNavItems = [
@@ -145,7 +151,7 @@ const bottomNavItems = [
   { icon: <Search />, label: 'Browse', href: '/products' },
   { icon: <Heart />, label: 'Saved', href: '#saved' },
   { icon: <ShoppingBag />, label: 'Cart', href: '#cart', badge: 0 },
-  { icon: <User />, label: 'Contact', href: '#contact' },
+  { icon: <User />, label: 'Quote', href: '/inquiry' },
 ];
 
 const testimonials = [
@@ -171,35 +177,29 @@ const testimonials = [
 
 export default function BalloonDisplaysHome() {
   const [cartOpen, setCartOpen] = React.useState(false);
-  const [cartItems, setCartItems] = React.useState<Array<{ product: typeof balloonProducts[0]; quantity: number }>>([]);
   const [bookingModalOpen, setBookingModalOpen] = React.useState(false);
   const [bookingService, setBookingService] = React.useState<typeof services[0] | null>(null);
   const { toasts, toast, removeToast } = useToast();
+  const cart = useCart();
 
   const addToCart = (product: typeof balloonProducts[0]) => {
-    setCartItems(prev => {
-      const existing = prev.find(item => item.product.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { product, quantity: 1 }];
+    cart.addItem({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      image: product.image,
+      type: 'product',
     });
     toast.success(`Added ${product.name} to cart`);
   };
-
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="min-h-screen pb-20 lg:pb-0">
       {/* Navigation */}
       <Navigation
         items={navItems}
-        cartCount={cartCount}
+        cartCount={cart.count}
         onCartClick={() => setCartOpen(true)}
         onSearchClick={() => toast.info('Search coming soon!')}
       />
@@ -224,7 +224,7 @@ export default function BalloonDisplaysHome() {
                 <span className="text-sm font-medium text-charcoal-600">Making celebrations unforgettable</span>
               </div>
 
-              <h1 className="font-display text-display-lg md:text-display-xl lg:text-display-2xl text-charcoal-700 mb-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+              <h1 className="font-accent text-display-lg md:text-display-xl lg:text-display-2xl text-charcoal-700 mb-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                 Stunning Balloon Displays for Every
                 <span className="text-botanical-600"> Celebration</span>
               </h1>
@@ -242,7 +242,7 @@ export default function BalloonDisplaysHome() {
                   </Link>
                 </Button>
                 <Button variant="outline" size="xl" asChild>
-                  <a href="#contact">Get a Quote</a>
+                  <Link href="/inquiry">Get a Quote</Link>
                 </Button>
               </div>
 
@@ -277,7 +277,7 @@ export default function BalloonDisplaysHome() {
                     <PartyPopper className="w-7 h-7 text-botanical-600" />
                   </div>
                   <div>
-                    <p className="text-2xl font-display font-semibold text-charcoal-700">500+</p>
+                    <p className="text-2xl font-body font-semibold text-charcoal-700">500+</p>
                     <p className="text-sm text-charcoal-400">Events Decorated</p>
                   </div>
                 </div>
@@ -291,7 +291,7 @@ export default function BalloonDisplaysHome() {
       <section className="py-20 bg-white">
         <div className="container-florista">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="font-display text-display-sm md:text-display-md text-charcoal-700 mb-4">
+            <h2 className="font-accent text-display-sm md:text-display-md text-charcoal-700 mb-4">
               Why Choose Us
             </h2>
             <p className="text-charcoal-500 text-lg">
@@ -325,7 +325,7 @@ export default function BalloonDisplaysHome() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>
               <Badge variant="botanical" className="mb-4">Our Products</Badge>
-              <h2 className="font-display text-display-sm md:text-display-md text-charcoal-700">
+              <h2 className="font-accent text-display-sm md:text-display-md text-charcoal-700">
                 Balloon Displays & Decorations
               </h2>
             </div>
@@ -357,7 +357,7 @@ export default function BalloonDisplaysHome() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>
               <Badge variant="botanical" className="mb-4">Our Services</Badge>
-              <h2 className="font-display text-display-sm md:text-display-md text-charcoal-700">
+              <h2 className="font-accent text-display-sm md:text-display-md text-charcoal-700">
                 Professional Event Services
               </h2>
             </div>
@@ -381,13 +381,26 @@ export default function BalloonDisplaysHome() {
                     <CardTitle className="text-xl mb-2">{service.name}</CardTitle>
                     <CardDescription className="mb-4">{service.description}</CardDescription>
                     <div className="flex items-center justify-between mt-auto">
-                      <PriceDisplay price={service.price} size="lg" />
-                      <Button size="sm" onClick={() => {
-                        setBookingService(service);
-                        setBookingModalOpen(true);
-                      }}>
-                        Book Now
-                      </Button>
+                      {service.price > 0 ? (
+                        <div>
+                          <span className="text-xs text-charcoal-400">Starting at</span>
+                          <PriceDisplay price={service.price} size="lg" />
+                        </div>
+                      ) : (
+                        <span className="font-body font-semibold text-lg text-charcoal-700">{service.priceLabel}</span>
+                      )}
+                      {service.price > 0 ? (
+                        <Button size="sm" onClick={() => {
+                          setBookingService(service);
+                          setBookingModalOpen(true);
+                        }}>
+                          Book Now
+                        </Button>
+                      ) : (
+                        <Button size="sm" asChild>
+                          <Link href="/inquiry">Get a Quote</Link>
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </div>
@@ -402,7 +415,7 @@ export default function BalloonDisplaysHome() {
         <div className="container-florista">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <Badge variant="botanical" className="mb-4">Testimonials</Badge>
-            <h2 className="font-display text-display-sm md:text-display-md text-charcoal-700 mb-4">
+            <h2 className="font-accent text-display-sm md:text-display-md text-charcoal-700 mb-4">
               What Our Customers Say
             </h2>
           </div>
@@ -426,6 +439,55 @@ export default function BalloonDisplaysHome() {
         </div>
       </section>
 
+      {/* How it Works */}
+      <section className="py-20 bg-white">
+        <div className="container-florista">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <Badge variant="botanical" className="mb-4">Simple Process</Badge>
+            <h2 className="font-accent text-display-sm md:text-display-md text-charcoal-700 mb-4">
+              How it Works
+            </h2>
+            <p className="text-charcoal-500 text-lg">
+              From browsing to beautiful setup, we make the process seamless
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              {
+                step: 1,
+                icon: <ClipboardList className="w-6 h-6" />,
+                title: 'Inquire & Plan',
+                description: 'Browse products, select items, and submit an inquiry or request a quote for your event.',
+              },
+              {
+                step: 2,
+                icon: <CreditCard className="w-6 h-6" />,
+                title: 'Payment',
+                description: 'Receive your custom quote and complete payment to confirm your booking.',
+              },
+              {
+                step: 3,
+                icon: <Truck className="w-6 h-6" />,
+                title: 'Setup & Cleanup',
+                description: 'Our team handles delivery, professional setup, and post-event cleanup.',
+              },
+            ].map((item) => (
+              <div key={item.step} className="text-center">
+                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-botanical-100 text-botanical-700 mb-5">
+                  {item.icon}
+                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-botanical-700 text-cream-100 text-sm font-semibold flex items-center justify-center">
+                    {item.step}
+                  </span>
+                </div>
+                <h3 className="font-body font-semibold text-lg text-charcoal-700 mb-2">{item.title}</h3>
+                <p className="text-charcoal-500 text-sm leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 bg-botanical-700 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -435,7 +497,7 @@ export default function BalloonDisplaysHome() {
         </div>
 
         <div className="container-florista relative z-10 text-center">
-          <h2 className="font-display text-display-sm md:text-display-md text-white mb-6">
+          <h2 className="font-accent text-display-sm md:text-display-md text-white mb-6">
             Ready to Make Your Event Unforgettable?
           </h2>
           <p className="text-botanical-100 text-lg max-w-2xl mx-auto mb-10">
@@ -443,7 +505,7 @@ export default function BalloonDisplaysHome() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button variant="secondary" size="xl" className="bg-white text-botanical-700 hover:bg-cream-100" asChild>
-              <a href="#contact">Get Free Quote</a>
+              <Link href="/inquiry">Get Free Quote</Link>
             </Button>
             <Button variant="outline" size="xl" className="border-white text-white hover:bg-white/10" asChild>
               <Link href="/gallery">View Gallery</Link>
@@ -458,7 +520,7 @@ export default function BalloonDisplaysHome() {
           <div className="grid lg:grid-cols-2 gap-16">
             <div>
               <Badge variant="botanical" className="mb-4">Get in Touch</Badge>
-              <h2 className="font-display text-display-sm md:text-display-md text-charcoal-700 mb-6">
+              <h2 className="font-accent text-display-sm md:text-display-md text-charcoal-700 mb-6">
                 Let's Plan Your Perfect Event
               </h2>
               <p className="text-charcoal-500 text-lg mb-8">
@@ -510,27 +572,29 @@ export default function BalloonDisplaysHome() {
             </div>
 
             <Card variant="elevated" className="p-8">
-              <h3 className="font-display text-xl text-charcoal-700 mb-6">Request a Quote</h3>
+              <h3 className="font-body text-xl text-charcoal-700 mb-6">Request a Quote</h3>
               <form className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Your Name</label>
+                  <label htmlFor="contact-name" className="block text-sm font-medium text-charcoal-600 mb-2">Your Name</label>
                   <input
+                    id="contact-name"
                     type="text"
                     className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
                     placeholder="John Smith"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Email</label>
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-charcoal-600 mb-2">Email</label>
                   <input
+                    id="contact-email"
                     type="email"
                     className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
                     placeholder="john@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Type</label>
-                  <select className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors bg-white">
+                  <label htmlFor="contact-event-type" className="block text-sm font-medium text-charcoal-600 mb-2">Event Type</label>
+                  <select id="contact-event-type" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors bg-white">
                     <option>Birthday Party</option>
                     <option>Wedding</option>
                     <option>Corporate Event</option>
@@ -540,15 +604,17 @@ export default function BalloonDisplaysHome() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Date</label>
+                  <label htmlFor="contact-event-date" className="block text-sm font-medium text-charcoal-600 mb-2">Event Date</label>
                   <input
+                    id="contact-event-date"
                     type="date"
                     className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Tell us about your vision</label>
+                  <label htmlFor="contact-vision" className="block text-sm font-medium text-charcoal-600 mb-2">Tell us about your vision</label>
                   <textarea
+                    id="contact-vision"
                     rows={4}
                     className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none"
                     placeholder="Describe your ideal balloon decorations..."
@@ -568,13 +634,13 @@ export default function BalloonDisplaysHome() {
         <div className="container-florista">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div className="md:col-span-2">
-              <h3 className="font-display text-2xl text-white mb-4">Balloon Displays</h3>
+              <h3 className="font-body text-2xl text-white mb-4">Balloon Displays</h3>
               <p className="text-cream-300 max-w-md mb-6">
                 Creating unforgettable moments through stunning balloon artistry.
                 Serving the Greater Toronto Area with passion and creativity.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-charcoal-600 flex items-center justify-center hover:bg-botanical-600 transition-colors">
+                <a href="#" className="w-10 h-10 rounded-full bg-charcoal-600 flex items-center justify-center hover:bg-botanical-600 transition-colors" aria-label="Follow us on Instagram">
                   <Instagram className="w-5 h-5" />
                 </a>
               </div>
@@ -584,9 +650,10 @@ export default function BalloonDisplaysHome() {
               <h4 className="font-semibold text-white mb-4">Quick Links</h4>
               <ul className="space-y-3">
                 <li><Link href="/products" className="text-cream-300 hover:text-white transition-colors">Products</Link></li>
-                <li><a href="#services" className="text-cream-300 hover:text-white transition-colors">Services</a></li>
+                <li><Link href="/services" className="text-cream-300 hover:text-white transition-colors">Services</Link></li>
                 <li><Link href="/gallery" className="text-cream-300 hover:text-white transition-colors">Gallery</Link></li>
-                <li><a href="#contact" className="text-cream-300 hover:text-white transition-colors">Contact</a></li>
+                <li><Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors">Request a Quote</Link></li>
+                <li><Link href="/faq" className="text-cream-300 hover:text-white transition-colors">FAQ</Link></li>
               </ul>
             </div>
 
@@ -624,8 +691,9 @@ export default function BalloonDisplaysHome() {
                 }}>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
+                      <label htmlFor="booking-name" className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
                       <input
+                        id="booking-name"
                         type="text"
                         required
                         className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
@@ -633,8 +701,9 @@ export default function BalloonDisplaysHome() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
+                      <label htmlFor="booking-phone" className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
                       <input
+                        id="booking-phone"
                         type="tel"
                         required
                         className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
@@ -643,8 +712,9 @@ export default function BalloonDisplaysHome() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
+                    <label htmlFor="booking-email" className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
                     <input
+                      id="booking-email"
                       type="email"
                       required
                       className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
@@ -653,24 +723,27 @@ export default function BalloonDisplaysHome() {
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
+                      <label htmlFor="booking-date" className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
                       <input
+                        id="booking-date"
                         type="date"
                         required
                         className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Time</label>
+                      <label htmlFor="booking-time" className="block text-sm font-medium text-charcoal-600 mb-2">Event Time</label>
                       <input
+                        id="booking-time"
                         type="time"
                         className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Type *</label>
+                    <label htmlFor="booking-event-type" className="block text-sm font-medium text-charcoal-600 mb-2">Event Type *</label>
                     <select
+                      id="booking-event-type"
                       required
                       className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors bg-white"
                     >
@@ -684,16 +757,18 @@ export default function BalloonDisplaysHome() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
+                    <label htmlFor="booking-venue" className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
                     <input
+                      id="booking-venue"
                       type="text"
                       className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors"
                       placeholder="123 Main St, Toronto, ON"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Special Requests</label>
+                    <label htmlFor="booking-requests" className="block text-sm font-medium text-charcoal-600 mb-2">Special Requests</label>
                     <textarea
+                      id="booking-requests"
                       rows={3}
                       className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none"
                       placeholder="Tell us about any specific requirements..."
@@ -703,7 +778,7 @@ export default function BalloonDisplaysHome() {
                   <div className="p-4 rounded-lg bg-botanical-50 border border-botanical-200">
                     <div className="flex items-center justify-between">
                       <span className="text-charcoal-600">{bookingService.name}</span>
-                      <span className="font-display font-semibold text-lg text-botanical-700">
+                      <span className="font-body font-semibold text-lg text-botanical-700">
                         ${bookingService.price.toFixed(2)}
                       </span>
                     </div>
@@ -723,10 +798,10 @@ export default function BalloonDisplaysHome() {
       <Drawer open={cartOpen} onOpenChange={setCartOpen}>
         <DrawerContent position="right" size="md">
           <DrawerHeader>
-            <DrawerTitle>Your Cart ({cartCount})</DrawerTitle>
+            <DrawerTitle>Your Cart ({cart.count})</DrawerTitle>
           </DrawerHeader>
           <DrawerBody>
-            {cartItems.length === 0 ? (
+            {cart.items.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingBag className="w-16 h-16 mx-auto text-cream-400 mb-4" />
                 <p className="text-charcoal-500">Your cart is empty</p>
@@ -736,29 +811,21 @@ export default function BalloonDisplaysHome() {
               </div>
             ) : (
               <div className="space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item.product.id} className="flex gap-4">
+                {cart.items.map((item) => (
+                  <div key={item.id} className="flex gap-4">
                     <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
                       <img
-                        src={item.product.image}
-                        alt={item.product.name}
+                        src={item.image}
+                        alt={item.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium">{item.product.name}</h4>
-                      <PriceDisplay price={item.product.price} size="sm" />
+                      <h4 className="font-medium">{item.name}</h4>
+                      <PriceDisplay price={item.price} size="sm" />
                       <QuantitySelector
                         value={item.quantity}
-                        onChange={(val) => {
-                          setCartItems(prev =>
-                            prev.map(i =>
-                              i.product.id === item.product.id
-                                ? { ...i, quantity: val }
-                                : i
-                            ).filter(i => i.quantity > 0)
-                          );
-                        }}
+                        onChange={(val) => cart.updateQuantity(item.id, val)}
                         size="sm"
                         className="mt-2"
                         min={0}
@@ -769,14 +836,14 @@ export default function BalloonDisplaysHome() {
               </div>
             )}
           </DrawerBody>
-          {cartItems.length > 0 && (
+          {cart.items.length > 0 && (
             <DrawerFooter className="space-y-4">
               <div className="flex justify-between text-lg">
                 <span>Subtotal</span>
-                <span className="font-semibold">${cartTotal.toFixed(2)} CAD</span>
+                <span className="font-semibold">${cart.total.toFixed(2)} CAD</span>
               </div>
-              <Button size="lg" fullWidth>
-                Request Quote
+              <Button size="lg" fullWidth asChild>
+                <Link href="/checkout">Checkout</Link>
               </Button>
               <p className="text-center text-sm text-charcoal-400">
                 We'll contact you to confirm details and arrange payment
@@ -789,7 +856,7 @@ export default function BalloonDisplaysHome() {
       {/* Bottom Navigation (Mobile) */}
       <BottomNav items={bottomNavItems.map(item => ({
         ...item,
-        badge: item.label === 'Cart' ? cartCount : undefined,
+        badge: item.label === 'Cart' ? cart.count : undefined,
       }))} />
 
       {/* Toast Container */}

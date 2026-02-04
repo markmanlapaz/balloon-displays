@@ -63,7 +63,7 @@ const Navigation = React.forwardRef<HTMLElement, NavigationProps>(
               {/* Logo */}
               <div className="flex-shrink-0">
                 {logo || (
-                  <a href="/" className="font-display font-semibold text-2xl text-botanical-700">
+                  <a href="/" className="font-body font-semibold text-2xl text-botanical-700">
                     Balloon Displays
                   </a>
                 )}

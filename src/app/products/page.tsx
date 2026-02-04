@@ -48,7 +48,9 @@ const navItems = [
   { label: 'Products', href: '/products', active: true },
   { label: 'Services', href: '/services' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Inquiry', href: '/inquiry' },
+  { label: 'About', href: '/about' },
+  { label: 'Request a Quote', href: '/inquiry' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const bottomNavItems = [
@@ -56,7 +58,7 @@ const bottomNavItems = [
   { icon: <Search />, label: 'Browse', href: '/products', active: true },
   { icon: <Heart />, label: 'Saved', href: '/#saved' },
   { icon: <ShoppingBag />, label: 'Cart', href: '/#cart' },
-  { icon: <User />, label: 'Contact', href: '/#contact' },
+  { icon: <User />, label: 'Quote', href: '/inquiry' },
 ];
 
 const sortOptions = [
@@ -226,8 +228,9 @@ export default function ProductsPage() {
 
       {/* Sort */}
       <div>
-        <h4 className="text-sm font-medium text-charcoal-600 mb-3">Sort By</h4>
+        <label htmlFor="sidebar-sort" className="text-sm font-medium text-charcoal-600 mb-3 block">Sort By</label>
         <select
+          id="sidebar-sort"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
           className="w-full px-3 py-2 rounded-lg border border-cream-400 bg-white text-sm text-charcoal-600 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100"
@@ -260,7 +263,7 @@ export default function ProductsPage() {
           </nav>
           <div className="max-w-2xl animate-fade-in-up">
             <Badge variant="botanical" className="mb-4">Shop</Badge>
-            <h1 className="font-display text-display-md md:text-display-lg text-charcoal-700 mb-4">
+            <h1 className="font-accent text-display-md md:text-display-lg text-charcoal-700 mb-4">
               All Products
             </h1>
             <p className="text-lg text-charcoal-500 leading-relaxed">
@@ -299,7 +302,7 @@ export default function ProductsPage() {
               <div className="sticky top-[96px] space-y-6">
                 <div className="bg-white rounded-xl p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className="font-display font-semibold text-charcoal-700">Filters</h3>
+                    <h3 className="font-body font-semibold text-charcoal-700">Filters</h3>
                     {hasActiveFilters && (
                       <button onClick={clearFilters} className="text-xs text-botanical-700 hover:underline font-medium">
                         Clear all
@@ -317,7 +320,9 @@ export default function ProductsPage() {
                 <p className="text-sm text-charcoal-500">
                   Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'item' : 'items'}
                 </p>
+                <label htmlFor="desktop-sort" className="sr-only">Sort by</label>
                 <select
+                  id="desktop-sort"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="px-3 py-2 rounded-lg border border-cream-400 bg-white text-sm text-charcoal-600 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100"
@@ -356,7 +361,7 @@ export default function ProductsPage() {
         <div className="container-florista">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
-              <h3 className="font-display text-xl text-white">Balloon Displays</h3>
+              <h3 className="font-body text-xl text-white">Balloon Displays</h3>
               <p className="text-cream-400 text-sm mt-1">Creating unforgettable moments</p>
             </div>
             <div className="flex gap-6">
@@ -364,7 +369,8 @@ export default function ProductsPage() {
               <Link href="/products" className="text-cream-300 hover:text-white transition-colors text-sm">Products</Link>
               <Link href="/services" className="text-cream-300 hover:text-white transition-colors text-sm">Services</Link>
               <Link href="/gallery" className="text-cream-300 hover:text-white transition-colors text-sm">Gallery</Link>
-              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">Inquiry</Link>
+              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">Request a Quote</Link>
+              <Link href="/faq" className="text-cream-300 hover:text-white transition-colors text-sm">FAQ</Link>
             </div>
           </div>
           <div className="border-t border-charcoal-600 mt-8 pt-8 text-center text-cream-400 text-sm">
@@ -418,7 +424,7 @@ export default function ProductsPage() {
                       {quickViewProduct.originalPrice && (
                         <span className="text-charcoal-300 line-through text-lg">{formatPrice(quickViewProduct.originalPrice)}</span>
                       )}
-                      <span className="font-display font-semibold text-2xl text-charcoal-700">{formatPrice(quickViewProduct.price)}</span>
+                      <span className="font-body font-semibold text-2xl text-charcoal-700">{formatPrice(quickViewProduct.price)}</span>
                     </div>
                     {quickViewProduct.reviews.length > 0 && (
                       <div className="flex items-center gap-2 mb-4">
@@ -493,7 +499,7 @@ export default function ProductsPage() {
                 <span className="font-semibold">${cart.total.toFixed(2)} CAD</span>
               </div>
               <Button size="lg" fullWidth asChild>
-                <Link href="/inquiry">Request Quote</Link>
+                <Link href="/checkout">Checkout</Link>
               </Button>
               <p className="text-center text-sm text-charcoal-400">We'll contact you to confirm details and arrange payment</p>
             </DrawerFooter>
@@ -542,14 +548,14 @@ function ProductGridCard({ product, index, onAddToCart, onQuickView }: ProductGr
               <Button size="sm" className="flex-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onAddToCart(); }} leftIcon={<ShoppingCart className="h-4 w-4" />}>
                 Add to Cart
               </Button>
-              <Button size="sm" variant="outline" className="bg-white/90 backdrop-blur-sm border-white/50" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onQuickView(); }}>
+              <Button size="sm" variant="outline" className="bg-white/90 backdrop-blur-sm border-white/50" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onQuickView(); }} aria-label={`Quick view ${product.name}`}>
                 <Eye className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
         <div>
-          <h3 className="font-display font-medium text-lg text-charcoal-700 group-hover:text-botanical-700 transition-colors">{product.name}</h3>
+          <h3 className="font-body font-medium text-lg text-charcoal-700 group-hover:text-botanical-700 transition-colors">{product.name}</h3>
           <p className="text-sm text-charcoal-400 mt-1 line-clamp-2">{product.description}</p>
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-2">

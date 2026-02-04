@@ -36,7 +36,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
         >
           <span className="[&>svg]:w-6 [&>svg]:h-6">{icon}</span>
         </div>
-        <h3 className="font-display font-medium text-lg text-charcoal-700">
+        <h3 className="font-body font-medium text-lg text-charcoal-700">
           {title}
         </h3>
         {description && (

@@ -68,7 +68,7 @@ const Hero = React.forwardRef<HTMLElement, HeroProps>(
             {subheadline && (
               <p
                 className={cn(
-                  'font-display text-lg lg:text-xl mb-4 animate-fade-in-up',
+                  'font-body text-lg lg:text-xl mb-4 animate-fade-in-up',
                   backgroundImage ? 'text-cream-200' : 'text-charcoal-500'
                 )}
                 style={{ animationDelay: '100ms' }}
@@ -79,7 +79,7 @@ const Hero = React.forwardRef<HTMLElement, HeroProps>(
 
             <h1
               className={cn(
-                'font-display font-bold text-display-md lg:text-display-xl text-balance animate-fade-in-up',
+                'font-body font-bold text-display-md lg:text-display-xl text-balance animate-fade-in-up',
                 backgroundImage ? 'text-white' : 'text-charcoal-700'
               )}
               style={{ animationDelay: '200ms' }}
@@ -150,12 +150,12 @@ const Hero = React.forwardRef<HTMLElement, HeroProps>(
               )}
             >
               {subheadline && (
-                <p className="font-display text-botanical-600 text-lg mb-3 animate-fade-in-up">
+                <p className="font-body text-botanical-600 text-lg mb-3 animate-fade-in-up">
                   {subheadline}
                 </p>
               )}
 
-              <h1 className="font-display font-bold text-display-md lg:text-display-lg text-charcoal-700 text-balance animate-fade-in-up">
+              <h1 className="font-body font-bold text-display-md lg:text-display-lg text-charcoal-700 text-balance animate-fade-in-up">
                 {headline}
               </h1>
 
@@ -208,7 +208,7 @@ const Hero = React.forwardRef<HTMLElement, HeroProps>(
             <div className="max-w-lg">
               {subheadline && (
                 <p
-                  className="font-display text-botanical-600 text-lg lg:text-xl mb-2 animate-fade-in-up"
+                  className="font-body text-botanical-600 text-lg lg:text-xl mb-2 animate-fade-in-up"
                   style={{ animationDelay: '100ms' }}
                 >
                   {subheadline}
@@ -216,7 +216,7 @@ const Hero = React.forwardRef<HTMLElement, HeroProps>(
               )}
 
               <h1
-                className="font-display font-bold text-display-md lg:text-display-lg xl:text-display-xl text-charcoal-700 text-balance animate-fade-in-up"
+                className="font-body font-bold text-display-md lg:text-display-lg xl:text-display-xl text-charcoal-700 text-balance animate-fade-in-up"
                 style={{ animationDelay: '200ms' }}
               >
                 {headline}

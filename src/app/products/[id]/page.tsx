@@ -48,7 +48,9 @@ const navItems = [
   { label: 'Products', href: '/products' },
   { label: 'Services', href: '/services' },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Inquiry', href: '/inquiry' },
+  { label: 'About', href: '/about' },
+  { label: 'Request a Quote', href: '/inquiry' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const bottomNavItems = [
@@ -56,7 +58,7 @@ const bottomNavItems = [
   { icon: <Search />, label: 'Browse', href: '/products' },
   { icon: <Heart />, label: 'Saved', href: '/#saved' },
   { icon: <ShoppingBag />, label: 'Cart', href: '/#cart' },
-  { icon: <User />, label: 'Contact', href: '/#contact' },
+  { icon: <User />, label: 'Quote', href: '/inquiry' },
 ];
 
 export default function ProductDetailPage() {
@@ -77,7 +79,7 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream-100">
         <div className="text-center">
-          <h1 className="font-display text-display-md text-charcoal-700 mb-4">Product Not Found</h1>
+          <h1 className="font-body text-display-md text-charcoal-700 mb-4">Product Not Found</h1>
           <p className="text-charcoal-500 mb-6">The product you're looking for doesn't exist.</p>
           <Button asChild><Link href="/products">Browse All Products</Link></Button>
         </div>
@@ -198,7 +200,7 @@ export default function ProductDetailPage() {
                 {isService && <Badge variant="outline">Service</Badge>}
               </div>
 
-              <h1 className="font-display text-display-sm md:text-display-md text-charcoal-700 mb-3">{product.name}</h1>
+              <h1 className="font-accent text-display-sm md:text-display-md text-charcoal-700 mb-3">{product.name}</h1>
 
               {product.reviews.length > 0 && (
                 <div className="flex items-center gap-2 mb-4">
@@ -213,7 +215,7 @@ export default function ProductDetailPage() {
 
               <div className="flex items-center gap-3 mb-6">
                 {product.originalPrice && <span className="text-xl text-charcoal-300 line-through">{formatPrice(product.originalPrice)}</span>}
-                <span className="font-display font-semibold text-3xl text-charcoal-700">{formatPrice(product.price)}</span>
+                <span className="font-body font-semibold text-3xl text-charcoal-700">{formatPrice(product.price)}</span>
                 {product.originalPrice && (
                   <Badge variant="warning" size="sm">{Math.round((1 - product.price / product.originalPrice) * 100)}% OFF</Badge>
                 )}
@@ -222,7 +224,7 @@ export default function ProductDetailPage() {
               <p className="text-charcoal-500 leading-relaxed mb-6">{product.longDescription}</p>
 
               <div className="mb-8">
-                <h3 className="font-display font-semibold text-lg text-charcoal-700 mb-3">Features</h3>
+                <h3 className="font-body font-semibold text-lg text-charcoal-700 mb-3">Features</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {product.features.map((feature, i) => (
                     <div key={i} className="flex items-center gap-2">
@@ -267,7 +269,7 @@ export default function ProductDetailPage() {
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-8">
                 <Badge variant="botanical" className="mb-3">Customize Your Order</Badge>
-                <h2 className="font-display text-display-xs md:text-display-sm text-charcoal-700 mb-2">Add-Ons & Extras</h2>
+                <h2 className="font-accent text-display-xs md:text-display-sm text-charcoal-700 mb-2">Add-Ons & Extras</h2>
                 <p className="text-charcoal-500">Enhance your {isService ? 'service' : 'display'} with these popular additions</p>
               </div>
 
@@ -318,7 +320,7 @@ export default function ProductDetailPage() {
                 <div className="mt-6 p-4 rounded-xl bg-botanical-50 border border-botanical-200">
                   <div className="flex items-center justify-between">
                     <span className="text-charcoal-600">Add-ons total: <span className="font-semibold">{formatPrice(addOnTotal)}</span></span>
-                    <span className="font-display font-semibold text-lg text-charcoal-700">Order total: {formatPrice(totalPrice)}</span>
+                    <span className="font-body font-semibold text-lg text-charcoal-700">Order total: {formatPrice(totalPrice)}</span>
                   </div>
                 </div>
               )}
@@ -334,7 +336,7 @@ export default function ProductDetailPage() {
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="font-display text-display-xs md:text-display-sm text-charcoal-700 mb-1">Customer Reviews</h2>
+                  <h2 className="font-accent text-display-xs md:text-display-sm text-charcoal-700 mb-1">Customer Reviews</h2>
                   <div className="flex items-center gap-2">
                     <div className="flex gap-0.5">
                       {[...Array(5)].map((_, i) => (
@@ -375,7 +377,7 @@ export default function ProductDetailPage() {
       <section className="py-12 bg-white">
         <div className="container-florista">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="font-display text-display-xs md:text-display-sm text-charcoal-700">You Might Also Like</h2>
+            <h2 className="font-accent text-display-xs md:text-display-sm text-charcoal-700">You Might Also Like</h2>
             <Button variant="ghost" asChild><Link href="/products">View All<ChevronRight className="w-4 h-4 ml-1" /></Link></Button>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -384,7 +386,7 @@ export default function ProductDetailPage() {
                 <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200 mb-3">
                   <img src={p.image} alt={p.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
-                <h3 className="font-display font-medium text-charcoal-700 group-hover:text-botanical-700 transition-colors">{p.name}</h3>
+                <h3 className="font-body font-medium text-charcoal-700 group-hover:text-botanical-700 transition-colors">{p.name}</h3>
                 <span className="font-body font-semibold text-sm text-charcoal-700">{formatPrice(p.price)}</span>
               </Link>
             ))}
@@ -397,7 +399,7 @@ export default function ProductDetailPage() {
         <div className="container-florista">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
-              <h3 className="font-display text-xl text-white">Balloon Displays</h3>
+              <h3 className="font-body text-xl text-white">Balloon Displays</h3>
               <p className="text-cream-400 text-sm mt-1">Creating unforgettable moments</p>
             </div>
             <div className="flex gap-6">
@@ -405,7 +407,8 @@ export default function ProductDetailPage() {
               <Link href="/products" className="text-cream-300 hover:text-white transition-colors text-sm">Products</Link>
               <Link href="/services" className="text-cream-300 hover:text-white transition-colors text-sm">Services</Link>
               <Link href="/gallery" className="text-cream-300 hover:text-white transition-colors text-sm">Gallery</Link>
-              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">Inquiry</Link>
+              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">Request a Quote</Link>
+              <Link href="/faq" className="text-cream-300 hover:text-white transition-colors text-sm">FAQ</Link>
             </div>
           </div>
           <div className="border-t border-charcoal-600 mt-8 pt-8 text-center text-cream-400 text-sm"><p>2026 Balloon Displays. All rights reserved.</p></div>
@@ -427,31 +430,31 @@ export default function ProductDetailPage() {
             }}>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
-                  <input type="text" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="John Smith" />
+                  <label htmlFor="pd-booking-name" className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
+                  <input id="pd-booking-name" type="text" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="John Smith" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
-                  <input type="tel" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="(555) 123-4567" />
+                  <label htmlFor="pd-booking-phone" className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
+                  <input id="pd-booking-phone" type="tel" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="(555) 123-4567" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
-                <input type="email" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="john@example.com" />
+                <label htmlFor="pd-booking-email" className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
+                <input id="pd-booking-email" type="email" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="john@example.com" />
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
-                  <input type="date" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" />
+                  <label htmlFor="pd-booking-date" className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
+                  <input id="pd-booking-date" type="date" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Time</label>
-                  <input type="time" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" />
+                  <label htmlFor="pd-booking-time" className="block text-sm font-medium text-charcoal-600 mb-2">Event Time</label>
+                  <input id="pd-booking-time" type="time" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Type *</label>
-                <select required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors bg-white">
+                <label htmlFor="pd-booking-event-type" className="block text-sm font-medium text-charcoal-600 mb-2">Event Type *</label>
+                <select id="pd-booking-event-type" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors bg-white">
                   <option value="">Select event type</option>
                   <option>Birthday Party</option>
                   <option>Wedding</option>
@@ -462,12 +465,12 @@ export default function ProductDetailPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
-                <input type="text" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="123 Main St, Toronto, ON" />
+                <label htmlFor="pd-booking-venue" className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
+                <input id="pd-booking-venue" type="text" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="123 Main St, Toronto, ON" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-charcoal-600 mb-2">Special Requests</label>
-                <textarea rows={3} className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none" placeholder="Tell us about any specific requirements..." />
+                <label htmlFor="pd-booking-requests" className="block text-sm font-medium text-charcoal-600 mb-2">Special Requests</label>
+                <textarea id="pd-booking-requests" rows={3} className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none" placeholder="Tell us about any specific requirements..." />
               </div>
               <div className="p-4 rounded-lg bg-botanical-50 border border-botanical-200">
                 <div className="flex items-center justify-between">
@@ -482,7 +485,7 @@ export default function ProductDetailPage() {
                 )}
                 <div className="flex items-center justify-between mt-2 pt-2 border-t border-botanical-200">
                   <span className="font-medium text-charcoal-700">Total</span>
-                  <span className="font-display font-semibold text-lg text-botanical-700">{formatPrice(totalPrice)}</span>
+                  <span className="font-body font-semibold text-lg text-botanical-700">{formatPrice(totalPrice)}</span>
                 </div>
               </div>
               <Button type="submit" size="lg" fullWidth>Submit Booking Request</Button>
@@ -526,7 +529,7 @@ export default function ProductDetailPage() {
                 <span>Subtotal</span>
                 <span className="font-semibold">${cart.total.toFixed(2)} CAD</span>
               </div>
-              <Button size="lg" fullWidth asChild><Link href="/inquiry">Request Quote</Link></Button>
+              <Button size="lg" fullWidth asChild><Link href="/checkout">Checkout</Link></Button>
               <p className="text-center text-sm text-charcoal-400">We'll contact you to confirm details and arrange payment</p>
             </DrawerFooter>
           )}

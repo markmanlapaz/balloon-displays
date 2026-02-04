@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Fraunces } from 'next/font/google';
+import { DM_Sans, Fraunces, Bellota } from 'next/font/google';
 import '@/styles/globals.css';
 
 const dmSans = DM_Sans({
@@ -11,6 +11,13 @@ const dmSans = DM_Sans({
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
+  display: 'swap',
+});
+
+const bellota = Bellota({
+  subsets: ['latin'],
+  weight: '300',
+  variable: '--font-bellota',
   display: 'swap',
 });
 
@@ -26,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${fraunces.variable} ${bellota.variable}`}>
       <body className="min-h-screen bg-cream-100 font-body antialiased">
         {children}
       </body>

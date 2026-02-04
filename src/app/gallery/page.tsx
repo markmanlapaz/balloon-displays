@@ -23,8 +23,20 @@ import {
   Badge,
   Navigation,
   BottomNav,
+  Toast,
+  ToastContainer,
+  useToast,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerBody,
+  DrawerFooter,
+  PriceDisplay,
+  QuantitySelector,
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/lib/cart';
 
 // Gallery images with metadata
 const galleryImages = [
@@ -114,9 +126,11 @@ const categories = [
 
 const navItems = [
   { label: 'Products', href: '/products' },
-  { label: 'Services', href: '/#services' },
+  { label: 'Services', href: '/services' },
   { label: 'Gallery', href: '/gallery', active: true },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'About', href: '/about' },
+  { label: 'Request a Quote', href: '/inquiry' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const bottomNavItems = [
@@ -124,7 +138,7 @@ const bottomNavItems = [
   { icon: <Search />, label: 'Browse', href: '/products' },
   { icon: <Heart />, label: 'Saved', href: '/#saved' },
   { icon: <ShoppingBag />, label: 'Cart', href: '/#cart' },
-  { icon: <User />, label: 'Contact', href: '/#contact' },
+  { icon: <User />, label: 'Quote', href: '/inquiry' },
 ];
 
 type ViewMode = 'grid' | 'masonry';
@@ -240,7 +254,7 @@ function Lightbox({ images, currentIndex, isOpen, onClose, onPrevious, onNext }:
 
         {/* Footer with image info */}
         <div className="p-4 md:p-6 text-center">
-          <h3 className="font-display text-xl md:text-2xl text-cream-100 mb-1">
+          <h3 className="font-body text-xl md:text-2xl text-cream-100 mb-1">
             {currentImage.title}
           </h3>
           <p className="text-cream-400 text-sm md:text-base">
@@ -256,6 +270,10 @@ export default function GalleryPage() {
   const [selectedCategory, setSelectedCategory] = React.useState('all');
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
   const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
+  const [cartOpen, setCartOpen] = React.useState(false);
+
+  const cart = useCart();
+  const { toasts, toast, removeToast } = useToast();
 
   const filteredImages = React.useMemo(() => {
     if (selectedCategory === 'all') return galleryImages;
@@ -285,7 +303,12 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen pb-20 lg:pb-0">
       {/* Navigation */}
-      <Navigation items={navItems} />
+      <Navigation
+        items={navItems}
+        cartCount={cart.count}
+        onCartClick={() => setCartOpen(true)}
+        onSearchClick={() => toast.info('Search coming soon!')}
+      />
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-cream-100 via-blush-50 to-botanical-50 pt-8 pb-16">
@@ -303,7 +326,7 @@ export default function GalleryPage() {
 
           <div className="max-w-2xl animate-fade-in-up">
             <Badge variant="botanical" className="mb-4">Our Work</Badge>
-            <h1 className="font-display text-display-md md:text-display-lg text-charcoal-700 mb-4">
+            <h1 className="font-accent text-display-md md:text-display-lg text-charcoal-700 mb-4">
               Gallery
             </h1>
             <p className="text-lg text-charcoal-500 leading-relaxed">
@@ -418,7 +441,7 @@ export default function GalleryPage() {
       {/* CTA Section */}
       <section className="py-16 bg-white">
         <div className="container-florista text-center">
-          <h2 className="font-display text-display-xs md:text-display-sm text-charcoal-700 mb-4">
+          <h2 className="font-accent text-display-xs md:text-display-sm text-charcoal-700 mb-4">
             Love What You See?
           </h2>
           <p className="text-charcoal-500 text-lg max-w-xl mx-auto mb-8">
@@ -427,10 +450,10 @@ export default function GalleryPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild>
-              <Link href="/#contact">Get a Quote</Link>
+              <Link href="/inquiry">Get a Quote</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <Link href="/#products">Browse Products</Link>
+              <Link href="/products">Browse Products</Link>
             </Button>
           </div>
         </div>
@@ -441,7 +464,7 @@ export default function GalleryPage() {
         <div className="container-florista">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
-              <h3 className="font-display text-xl text-white">Balloon Displays</h3>
+              <h3 className="font-body text-xl text-white">Balloon Displays</h3>
               <p className="text-cream-400 text-sm mt-1">
                 Creating unforgettable moments
               </p>
@@ -450,14 +473,20 @@ export default function GalleryPage() {
               <Link href="/" className="text-cream-300 hover:text-white transition-colors text-sm">
                 Home
               </Link>
-              <Link href="/#products" className="text-cream-300 hover:text-white transition-colors text-sm">
+              <Link href="/products" className="text-cream-300 hover:text-white transition-colors text-sm">
                 Products
+              </Link>
+              <Link href="/services" className="text-cream-300 hover:text-white transition-colors text-sm">
+                Services
               </Link>
               <Link href="/gallery" className="text-cream-300 hover:text-white transition-colors text-sm">
                 Gallery
               </Link>
-              <Link href="/#contact" className="text-cream-300 hover:text-white transition-colors text-sm">
-                Contact
+              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">
+                Request a Quote
+              </Link>
+              <Link href="/faq" className="text-cream-300 hover:text-white transition-colors text-sm">
+                FAQ
               </Link>
             </div>
           </div>
@@ -467,8 +496,55 @@ export default function GalleryPage() {
         </div>
       </footer>
 
+      {/* Cart Drawer */}
+      <Drawer open={cartOpen} onOpenChange={setCartOpen}>
+        <DrawerContent position="right" size="md">
+          <DrawerHeader><DrawerTitle>Your Cart ({cart.count})</DrawerTitle></DrawerHeader>
+          <DrawerBody>
+            {cart.items.length === 0 ? (
+              <div className="text-center py-12">
+                <ShoppingBag className="w-16 h-16 mx-auto text-cream-400 mb-4" />
+                <p className="text-charcoal-500">Your cart is empty</p>
+                <Button variant="outline" className="mt-4" onClick={() => setCartOpen(false)}>Browse Products</Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {cart.items.map((item) => (
+                  <div key={item.id} className="flex gap-4">
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">{item.name}</h4>
+                      <PriceDisplay price={item.price} size="sm" />
+                      <QuantitySelector value={item.quantity} onChange={(val) => cart.updateQuantity(item.id, val)} size="sm" className="mt-2" min={0} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </DrawerBody>
+          {cart.items.length > 0 && (
+            <DrawerFooter className="space-y-4">
+              <div className="flex justify-between text-lg">
+                <span>Subtotal</span>
+                <span className="font-semibold">${cart.total.toFixed(2)} CAD</span>
+              </div>
+              <Button size="lg" fullWidth asChild>
+                <Link href="/checkout">Checkout</Link>
+              </Button>
+              <p className="text-center text-sm text-charcoal-400">We'll contact you to confirm details and arrange payment</p>
+            </DrawerFooter>
+          )}
+        </DrawerContent>
+      </Drawer>
+
       {/* Bottom Navigation (Mobile) */}
-      <BottomNav items={bottomNavItems} />
+      <BottomNav items={bottomNavItems.map(item => ({ ...item, badge: item.label === 'Cart' ? cart.count : undefined }))} />
+
+      <ToastContainer position="bottom-right">
+        {toasts.map((t) => (<Toast key={t.id} {...t} onClose={() => removeToast(t.id)} />))}
+      </ToastContainer>
 
       {/* Lightbox */}
       <Lightbox
@@ -527,7 +603,7 @@ function GalleryCard({ image, index, onClick }: GalleryCardProps) {
             {categories.find((c) => c.id === image.category)?.label || 'Photo'}
           </Badge>
           <h3
-            className="font-display text-lg text-cream-100 mb-1 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-normal"
+            className="font-body text-lg text-cream-100 mb-1 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-normal"
             style={{ transitionDelay: '100ms' }}
           >
             {image.title}
@@ -586,7 +662,7 @@ function GalleryCardMasonry({ image, index, onClick }: GalleryCardProps) {
             {categories.find((c) => c.id === image.category)?.label || 'Photo'}
           </Badge>
           <h3
-            className="font-display text-lg text-cream-100 mb-1 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-normal"
+            className="font-body text-lg text-cream-100 mb-1 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-normal"
             style={{ transitionDelay: '100ms' }}
           >
             {image.title}

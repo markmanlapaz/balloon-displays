@@ -33,6 +33,14 @@ import {
   Toast,
   ToastContainer,
   useToast,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerBody,
+  DrawerFooter,
+  PriceDisplay,
+  QuantitySelector,
 } from '@/components/ui';
 import { cn, formatPrice } from '@/lib/utils';
 import { servicesList, type ServiceItem } from '@/lib/data';
@@ -42,7 +50,9 @@ const navItems = [
   { label: 'Products', href: '/products' },
   { label: 'Services', href: '/services', active: true },
   { label: 'Gallery', href: '/gallery' },
-  { label: 'Inquiry', href: '/inquiry' },
+  { label: 'About', href: '/about' },
+  { label: 'Request a Quote', href: '/inquiry' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const bottomNavItems = [
@@ -50,13 +60,14 @@ const bottomNavItems = [
   { icon: <Search />, label: 'Browse', href: '/products' },
   { icon: <Heart />, label: 'Saved', href: '/#saved' },
   { icon: <ShoppingBag />, label: 'Cart', href: '/#cart' },
-  { icon: <User />, label: 'Contact', href: '/#contact' },
+  { icon: <User />, label: 'Quote', href: '/inquiry' },
 ];
 
 export default function ServicesPage() {
   const [selectedService, setSelectedService] = React.useState<ServiceItem | null>(null);
   const [bookingOpen, setBookingOpen] = React.useState(false);
   const [bookingService, setBookingService] = React.useState<ServiceItem | null>(null);
+  const [cartOpen, setCartOpen] = React.useState(false);
 
   const cart = useCart();
   const { toasts, toast, removeToast } = useToast();
@@ -68,7 +79,12 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen pb-20 lg:pb-0">
-      <Navigation items={navItems} cartCount={cart.count} />
+      <Navigation
+        items={navItems}
+        cartCount={cart.count}
+        onCartClick={() => setCartOpen(true)}
+        onSearchClick={() => toast.info('Search coming soon!')}
+      />
 
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-cream-100 via-blush-50 to-botanical-50 pt-8 pb-16">
@@ -81,7 +97,7 @@ export default function ServicesPage() {
           </nav>
           <div className="max-w-2xl animate-fade-in-up">
             <Badge variant="botanical" className="mb-4">Our Services</Badge>
-            <h1 className="font-display text-display-md md:text-display-lg text-charcoal-700 mb-4">
+            <h1 className="font-accent text-display-md md:text-display-lg text-charcoal-700 mb-4">
               Event Decoration Services
             </h1>
             <p className="text-lg text-charcoal-500 leading-relaxed">
@@ -111,7 +127,7 @@ export default function ServicesPage() {
                   {/* Content */}
                   <CardContent className="flex-1 p-6 lg:p-8 flex flex-col">
                     <div className="flex items-center gap-3 mb-3">
-                      <h2 className="font-display text-xl lg:text-2xl text-charcoal-700">{service.name}</h2>
+                      <h2 className="font-body text-xl lg:text-2xl text-charcoal-700">{service.name}</h2>
                     </div>
 
                     <p className="text-charcoal-500 leading-relaxed mb-4">{service.description}</p>
@@ -158,11 +174,11 @@ export default function ServicesPage() {
                         {service.price ? (
                           <div>
                             <span className="text-xs text-charcoal-400">Starting at</span>
-                            <span className="block font-display font-semibold text-2xl text-charcoal-700">{formatPrice(service.price)}</span>
+                            <span className="block font-body font-semibold text-2xl text-charcoal-700">{formatPrice(service.price)}</span>
                           </div>
                         ) : (
                           <div>
-                            <span className="font-display font-semibold text-lg text-charcoal-700">{service.priceLabel}</span>
+                            <span className="font-body font-semibold text-lg text-charcoal-700">{service.priceLabel}</span>
                             <span className="block text-xs text-charcoal-400">Custom pricing based on your event</span>
                           </div>
                         )}
@@ -191,7 +207,7 @@ export default function ServicesPage() {
           <div className="absolute bottom-10 right-[15%] w-32 h-44 rounded-full bg-white" />
         </div>
         <div className="container-florista relative z-10 text-center">
-          <h2 className="font-display text-display-xs md:text-display-sm text-white mb-4">
+          <h2 className="font-accent text-display-xs md:text-display-sm text-white mb-4">
             Free Professional Setup & Takedown
           </h2>
           <p className="text-botanical-100 text-lg max-w-2xl mx-auto mb-8">
@@ -214,7 +230,7 @@ export default function ServicesPage() {
         <div className="container-florista">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div>
-              <h3 className="font-display text-xl text-white">Balloon Displays</h3>
+              <h3 className="font-body text-xl text-white">Balloon Displays</h3>
               <p className="text-cream-400 text-sm mt-1">Creating unforgettable moments</p>
             </div>
             <div className="flex gap-6">
@@ -222,7 +238,8 @@ export default function ServicesPage() {
               <Link href="/products" className="text-cream-300 hover:text-white transition-colors text-sm">Products</Link>
               <Link href="/services" className="text-cream-300 hover:text-white transition-colors text-sm">Services</Link>
               <Link href="/gallery" className="text-cream-300 hover:text-white transition-colors text-sm">Gallery</Link>
-              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">Inquiry</Link>
+              <Link href="/inquiry" className="text-cream-300 hover:text-white transition-colors text-sm">Request a Quote</Link>
+              <Link href="/faq" className="text-cream-300 hover:text-white transition-colors text-sm">FAQ</Link>
             </div>
           </div>
           <div className="border-t border-charcoal-600 mt-8 pt-8 text-center text-cream-400 text-sm"><p>2026 Balloon Displays. All rights reserved.</p></div>
@@ -247,7 +264,7 @@ export default function ServicesPage() {
                   <p className="text-charcoal-500 leading-relaxed">{selectedService.longDescription}</p>
 
                   <div>
-                    <h4 className="font-display font-semibold text-charcoal-700 mb-3">What's Included</h4>
+                    <h4 className="font-body font-semibold text-charcoal-700 mb-3">What's Included</h4>
                     <div className="grid sm:grid-cols-2 gap-2">
                       {selectedService.features.map((feature, i) => (
                         <div key={i} className="flex items-center gap-2">
@@ -260,7 +277,7 @@ export default function ServicesPage() {
 
                   {selectedService.reviews.length > 0 && (
                     <div>
-                      <h4 className="font-display font-semibold text-charcoal-700 mb-3">Reviews</h4>
+                      <h4 className="font-body font-semibold text-charcoal-700 mb-3">Reviews</h4>
                       <div className="space-y-3">
                         {selectedService.reviews.map((review) => (
                           <div key={review.id} className="p-4 rounded-lg bg-cream-100">
@@ -310,35 +327,35 @@ export default function ServicesPage() {
                 }}>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
-                      <input type="text" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="John Smith" />
+                      <label htmlFor="svc-booking-name" className="block text-sm font-medium text-charcoal-600 mb-2">Your Name *</label>
+                      <input id="svc-booking-name" type="text" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="John Smith" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
-                      <input type="tel" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="(555) 123-4567" />
+                      <label htmlFor="svc-booking-phone" className="block text-sm font-medium text-charcoal-600 mb-2">Phone Number *</label>
+                      <input id="svc-booking-phone" type="tel" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="(555) 123-4567" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
-                    <input type="email" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="john@example.com" />
+                    <label htmlFor="svc-booking-email" className="block text-sm font-medium text-charcoal-600 mb-2">Email *</label>
+                    <input id="svc-booking-email" type="email" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="john@example.com" />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
-                      <input type="date" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" />
+                      <label htmlFor="svc-booking-date" className="block text-sm font-medium text-charcoal-600 mb-2">Event Date *</label>
+                      <input id="svc-booking-date" type="date" required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-charcoal-600 mb-2">Estimated Guest Count</label>
-                      <input type="number" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="50" />
+                      <label htmlFor="svc-booking-guests" className="block text-sm font-medium text-charcoal-600 mb-2">Estimated Guest Count</label>
+                      <input id="svc-booking-guests" type="number" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="50" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
-                    <input type="text" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="123 Main St, Toronto, ON" />
+                    <label htmlFor="svc-booking-venue" className="block text-sm font-medium text-charcoal-600 mb-2">Venue Address</label>
+                    <input id="svc-booking-venue" type="text" className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors" placeholder="123 Main St, Toronto, ON" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-charcoal-600 mb-2">Tell us about your vision *</label>
-                    <textarea rows={4} required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none" placeholder="Color preferences, theme, specific ideas, and anything else we should know..." />
+                    <label htmlFor="svc-booking-vision" className="block text-sm font-medium text-charcoal-600 mb-2">Tell us about your vision *</label>
+                    <textarea id="svc-booking-vision" rows={4} required className="w-full px-4 py-3 rounded-lg border border-cream-400 focus:border-botanical-500 focus:outline-none focus:ring-2 focus:ring-botanical-100 transition-colors resize-none" placeholder="Color preferences, theme, specific ideas, and anything else we should know..." />
                   </div>
                   <Button type="submit" size="lg" fullWidth>
                     Submit Booking Request
@@ -349,6 +366,49 @@ export default function ServicesPage() {
           )}
         </ModalContent>
       </Modal>
+
+      {/* Cart Drawer */}
+      <Drawer open={cartOpen} onOpenChange={setCartOpen}>
+        <DrawerContent position="right" size="md">
+          <DrawerHeader><DrawerTitle>Your Cart ({cart.count})</DrawerTitle></DrawerHeader>
+          <DrawerBody>
+            {cart.items.length === 0 ? (
+              <div className="text-center py-12">
+                <ShoppingBag className="w-16 h-16 mx-auto text-cream-400 mb-4" />
+                <p className="text-charcoal-500">Your cart is empty</p>
+                <Button variant="outline" className="mt-4" onClick={() => setCartOpen(false)}>Browse Products</Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {cart.items.map((item) => (
+                  <div key={item.id} className="flex gap-4">
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium">{item.name}</h4>
+                      <PriceDisplay price={item.price} size="sm" />
+                      <QuantitySelector value={item.quantity} onChange={(val) => cart.updateQuantity(item.id, val)} size="sm" className="mt-2" min={0} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </DrawerBody>
+          {cart.items.length > 0 && (
+            <DrawerFooter className="space-y-4">
+              <div className="flex justify-between text-lg">
+                <span>Subtotal</span>
+                <span className="font-semibold">${cart.total.toFixed(2)} CAD</span>
+              </div>
+              <Button size="lg" fullWidth asChild>
+                <Link href="/checkout">Checkout</Link>
+              </Button>
+              <p className="text-center text-sm text-charcoal-400">We'll contact you to confirm details and arrange payment</p>
+            </DrawerFooter>
+          )}
+        </DrawerContent>
+      </Drawer>
 
       <BottomNav items={bottomNavItems.map(item => ({ ...item, badge: item.label === 'Cart' ? cart.count : undefined }))} />
 

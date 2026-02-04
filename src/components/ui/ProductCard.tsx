@@ -119,7 +119,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
           </div>
           <div className="flex-1 flex flex-col justify-between py-1">
             <div>
-              <h3 className="font-display font-medium text-lg text-charcoal-700">
+              <h3 className="font-body font-medium text-lg text-charcoal-700">
                 {name}
               </h3>
               {description && showDescription && (
@@ -230,6 +230,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
                       e.stopPropagation();
                       onQuickView(id);
                     }}
+                    aria-label={`Quick view ${name}`}
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
@@ -243,7 +244,7 @@ const ProductCard = React.forwardRef<HTMLDivElement, ProductCardProps>(
         <div className="pt-4">
           <h3
             className={cn(
-              'font-display font-medium text-charcoal-700',
+              'font-body font-medium text-charcoal-700',
               isFeatured ? 'text-xl' : 'text-lg'
             )}
           >
