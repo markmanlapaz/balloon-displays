@@ -37,6 +37,7 @@ import {
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/lib/cart';
+import { SearchModal } from '@/components/SearchModal';
 
 // Gallery images with metadata
 const galleryImages = [
@@ -271,6 +272,7 @@ export default function GalleryPage() {
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
   const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
   const [cartOpen, setCartOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   const cart = useCart();
   const { toasts, toast, removeToast } = useToast();
@@ -307,7 +309,7 @@ export default function GalleryPage() {
         items={navItems}
         cartCount={cart.count}
         onCartClick={() => setCartOpen(true)}
-        onSearchClick={() => toast.info('Search coming soon!')}
+        onSearchClick={() => setSearchOpen(true)}
       />
 
       {/* Hero Section */}
@@ -495,6 +497,13 @@ export default function GalleryPage() {
           </div>
         </div>
       </footer>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onAddedToCart={(product) => toast.success(`Added ${product.name} to cart`)}
+      />
 
       {/* Cart Drawer */}
       <Drawer open={cartOpen} onOpenChange={setCartOpen}>

@@ -38,6 +38,7 @@ import {
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/lib/cart';
+import { SearchModal } from '@/components/SearchModal';
 
 const navItems = [
   { label: 'Products', href: '/products' },
@@ -227,6 +228,7 @@ export default function FAQPage() {
   const cart = useCart();
   const { toasts, toast, removeToast } = useToast();
   const [cartOpen, setCartOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
   const [openItems, setOpenItems] = React.useState<Record<string, boolean>>({});
 
   const toggleItem = (key: string) => {
@@ -239,7 +241,7 @@ export default function FAQPage() {
         items={navItems}
         cartCount={cart.count}
         onCartClick={() => setCartOpen(true)}
-        onSearchClick={() => toast.info('Search coming soon!')}
+        onSearchClick={() => setSearchOpen(true)}
       />
 
       {/* Hero */}
@@ -336,6 +338,13 @@ export default function FAQPage() {
           <div className="border-t border-charcoal-600 mt-8 pt-8 text-center text-cream-400 text-sm"><p>2026 Balloon Displays. All rights reserved.</p></div>
         </div>
       </footer>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onAddedToCart={(product) => toast.success(`Added ${product.name} to cart`)}
+      />
 
       {/* Cart Drawer */}
       <Drawer open={cartOpen} onOpenChange={setCartOpen}>

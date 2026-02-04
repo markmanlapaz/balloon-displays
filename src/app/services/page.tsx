@@ -45,6 +45,7 @@ import {
 import { cn, formatPrice } from '@/lib/utils';
 import { servicesList, type ServiceItem } from '@/lib/data';
 import { useCart } from '@/lib/cart';
+import { SearchModal } from '@/components/SearchModal';
 
 const navItems = [
   { label: 'Products', href: '/products' },
@@ -68,6 +69,7 @@ export default function ServicesPage() {
   const [bookingOpen, setBookingOpen] = React.useState(false);
   const [bookingService, setBookingService] = React.useState<ServiceItem | null>(null);
   const [cartOpen, setCartOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   const cart = useCart();
   const { toasts, toast, removeToast } = useToast();
@@ -83,7 +85,7 @@ export default function ServicesPage() {
         items={navItems}
         cartCount={cart.count}
         onCartClick={() => setCartOpen(true)}
-        onSearchClick={() => toast.info('Search coming soon!')}
+        onSearchClick={() => setSearchOpen(true)}
       />
 
       {/* Hero */}
@@ -245,6 +247,13 @@ export default function ServicesPage() {
           <div className="border-t border-charcoal-600 mt-8 pt-8 text-center text-cream-400 text-sm"><p>2026 Balloon Displays. All rights reserved.</p></div>
         </div>
       </footer>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onAddedToCart={(product) => toast.success(`Added ${product.name} to cart`)}
+      />
 
       {/* Service Detail Modal */}
       <Modal open={selectedService !== null} onOpenChange={(open) => { if (!open) setSelectedService(null); }}>

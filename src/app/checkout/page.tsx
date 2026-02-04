@@ -28,6 +28,7 @@ import {
 } from '@/components/ui';
 import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/lib/cart';
+import { SearchModal } from '@/components/SearchModal';
 
 const navItems = [
   { label: 'Products', href: '/products' },
@@ -56,6 +57,7 @@ export default function CheckoutPage() {
   const cart = useCart();
   const { toasts, toast, removeToast } = useToast();
   const [submitted, setSubmitted] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   const minDate = React.useMemo(() => getMinDate(), []);
 
@@ -70,7 +72,7 @@ export default function CheckoutPage() {
       <Navigation
         items={navItems}
         cartCount={cart.count}
-        onSearchClick={() => toast.info('Search coming soon!')}
+        onSearchClick={() => setSearchOpen(true)}
       />
 
       {/* Hero */}
@@ -356,6 +358,13 @@ export default function CheckoutPage() {
           <div className="border-t border-charcoal-600 mt-8 pt-8 text-center text-cream-400 text-sm"><p>2026 Balloon Displays. All rights reserved.</p></div>
         </div>
       </footer>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onAddedToCart={(product) => toast.success(`Added ${product.name} to cart`)}
+      />
 
       <BottomNav items={bottomNavItems.map(item => ({ ...item, badge: item.label === 'Cart' ? cart.count : undefined }))} />
 

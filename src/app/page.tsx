@@ -21,6 +21,8 @@ import {
   Truck,
   ClipboardList,
   CreditCard,
+  Check,
+  ShoppingCart,
 } from 'lucide-react';
 
 import {
@@ -54,8 +56,10 @@ import {
   ModalDescription,
   ModalBody,
 } from '@/components/ui';
+import { SearchModal } from '@/components/SearchModal';
 import { useCart } from '@/lib/cart';
-import { formatPrice } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
+import { allProducts, type Product } from '@/lib/data';
 
 // Balloon products from CSV
 const balloonProducts = [
@@ -179,6 +183,9 @@ export default function BalloonDisplaysHome() {
   const [cartOpen, setCartOpen] = React.useState(false);
   const [bookingModalOpen, setBookingModalOpen] = React.useState(false);
   const [bookingService, setBookingService] = React.useState<typeof services[0] | null>(null);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [quickViewProduct, setQuickViewProduct] = React.useState<Product | null>(null);
+  const [quickViewQuantity, setQuickViewQuantity] = React.useState(1);
   const { toasts, toast, removeToast } = useToast();
   const cart = useCart();
 
@@ -201,7 +208,7 @@ export default function BalloonDisplaysHome() {
         items={navItems}
         cartCount={cart.count}
         onCartClick={() => setCartOpen(true)}
-        onSearchClick={() => toast.info('Search coming soon!')}
+        onSearchClick={() => setSearchOpen(true)}
       />
 
       {/* Hero Section */}
@@ -343,7 +350,13 @@ export default function BalloonDisplaysHome() {
                 key={product.id}
                 product={product}
                 onAddToCart={() => addToCart(product)}
-                onQuickView={() => toast.info('Quick view coming soon!')}
+                onQuickView={() => {
+                  const full = allProducts.find((p) => p.id === product.id);
+                  if (full) {
+                    setQuickViewProduct(full);
+                    setQuickViewQuantity(1);
+                  }
+                }}
                 onClick={() => window.location.href = `/products/${product.id}`}
               />
             ))}
@@ -788,6 +801,93 @@ export default function BalloonDisplaysHome() {
                     Submit Booking Request
                   </Button>
                 </form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onAddedToCart={(product) => toast.success(`Added ${product.name} to cart`)}
+      />
+
+      {/* Quick View Modal */}
+      <Modal open={quickViewProduct !== null} onOpenChange={(open) => { if (!open) setQuickViewProduct(null); }}>
+        <ModalContent size="lg">
+          {quickViewProduct && (
+            <>
+              <ModalHeader>
+                <ModalTitle>{quickViewProduct.name}</ModalTitle>
+                <ModalDescription>{quickViewProduct.type === 'service' ? 'Service' : 'Product'}</ModalDescription>
+              </ModalHeader>
+              <ModalBody>
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="md:w-1/2">
+                    <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200">
+                      <img src={quickViewProduct.image} alt={quickViewProduct.name} className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div className="md:w-1/2 flex flex-col">
+                    {quickViewProduct.badge && (
+                      <Badge variant={quickViewProduct.badge === 'Sale' ? 'warning' : 'botanical'} className="w-fit mb-3">
+                        {quickViewProduct.badge}
+                      </Badge>
+                    )}
+                    <p className="text-charcoal-500 text-sm leading-relaxed mb-4">
+                      {quickViewProduct.longDescription.slice(0, 200)}...
+                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      {quickViewProduct.originalPrice && (
+                        <span className="text-charcoal-300 line-through text-lg">{formatPrice(quickViewProduct.originalPrice)}</span>
+                      )}
+                      <span className="font-body font-semibold text-2xl text-charcoal-700">{formatPrice(quickViewProduct.price)}</span>
+                    </div>
+                    {quickViewProduct.reviews.length > 0 && (
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className={cn('w-4 h-4', i < Math.round(quickViewProduct.reviews.reduce((s, r) => s + r.rating, 0) / quickViewProduct.reviews.length) ? 'fill-terracotta-400 text-terracotta-400' : 'text-cream-400')} />
+                          ))}
+                        </div>
+                        <span className="text-sm text-charcoal-500">({quickViewProduct.reviews.length} {quickViewProduct.reviews.length === 1 ? 'review' : 'reviews'})</span>
+                      </div>
+                    )}
+                    <ul className="space-y-1.5 mb-6">
+                      {quickViewProduct.features.slice(0, 4).map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm text-charcoal-600">
+                          <Check className="w-3.5 h-3.5 text-botanical-600 flex-shrink-0" />{feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-auto space-y-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-charcoal-600">Qty:</span>
+                        <QuantitySelector value={quickViewQuantity} onChange={setQuickViewQuantity} min={1} max={20} size="sm" />
+                      </div>
+                      <Button fullWidth size="lg" leftIcon={<ShoppingCart className="w-5 h-5" />}
+                        onClick={() => {
+                          cart.addItem({
+                            id: quickViewProduct.id,
+                            name: quickViewProduct.name,
+                            description: quickViewProduct.description,
+                            price: quickViewProduct.price,
+                            image: quickViewProduct.image,
+                            type: quickViewProduct.type === 'service' ? 'service' : 'product',
+                          }, quickViewQuantity);
+                          toast.success(`Added ${quickViewProduct.name} to cart`);
+                          setQuickViewProduct(null);
+                        }}>
+                        Add to Cart - {formatPrice(quickViewProduct.price * quickViewQuantity)}
+                      </Button>
+                      <Button variant="outline" fullWidth asChild>
+                        <Link href={`/products/${quickViewProduct.id}`}>View Full Details<ChevronRight className="w-4 h-4 ml-1" /></Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </ModalBody>
             </>
           )}

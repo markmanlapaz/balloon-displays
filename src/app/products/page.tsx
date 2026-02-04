@@ -43,6 +43,7 @@ import {
 import { cn, formatPrice } from '@/lib/utils';
 import { allProducts, categories, type Product } from '@/lib/data';
 import { useCart } from '@/lib/cart';
+import { SearchModal } from '@/components/SearchModal';
 
 const navItems = [
   { label: 'Products', href: '/products', active: true },
@@ -83,6 +84,7 @@ export default function ProductsPage() {
   const [priceRange, setPriceRange] = React.useState('all');
   const [typeFilter, setTypeFilter] = React.useState<'all' | 'product' | 'service'>('all');
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
   const [quickViewProduct, setQuickViewProduct] = React.useState<Product | null>(null);
   const [quickViewQuantity, setQuickViewQuantity] = React.useState(1);
   const [cartOpen, setCartOpen] = React.useState(false);
@@ -249,7 +251,7 @@ export default function ProductsPage() {
         items={navItems}
         cartCount={cart.count}
         onCartClick={() => setCartOpen(true)}
-        onSearchClick={() => toast.info('Search coming soon!')}
+        onSearchClick={() => setSearchOpen(true)}
       />
 
       {/* Hero */}
@@ -394,6 +396,13 @@ export default function ProductsPage() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onAddedToCart={(product) => toast.success(`Added ${product.name} to cart`)}
+      />
 
       {/* Quick View Modal */}
       <Modal open={quickViewProduct !== null} onOpenChange={(open) => { if (!open) setQuickViewProduct(null); }}>
