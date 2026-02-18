@@ -214,10 +214,11 @@ function Lightbox({ images, currentIndex, isOpen, onClose, onPrevious, onNext }:
         {/* Image container */}
         <div className="flex-1 flex items-center justify-center px-4 md:px-16 py-4 min-h-0">
           <div className="relative w-full h-full max-w-5xl flex items-center justify-center animate-scale-in">
-            <img
+            <Image
               src={currentImage.src}
               alt={currentImage.alt}
-              className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
+              fill
+              className="object-contain rounded-xl"
             />
           </div>
 
@@ -520,8 +521,8 @@ export default function GalleryPage() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium">{item.name}</h4>
@@ -585,11 +586,12 @@ function GalleryCard({ image, index, onClick }: GalleryCardProps) {
       onClick={onClick}
     >
       {/* Image container with fixed aspect ratio */}
-      <div className="aspect-[4/5] overflow-hidden">
-        <img
+      <div className="aspect-[4/5] overflow-hidden relative">
+        <Image
           src={image.src}
           alt={image.alt}
-          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
 
@@ -644,11 +646,12 @@ function GalleryCardMasonry({ image, index, onClick }: GalleryCardProps) {
       onClick={onClick}
     >
       {/* Image container with variable aspect ratio */}
-      <div className={cn(heightClass, 'overflow-hidden')}>
-        <img
+      <div className={cn(heightClass, 'overflow-hidden relative')}>
+        <Image
           src={image.src}
           alt={image.alt}
-          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
 

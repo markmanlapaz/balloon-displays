@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   Search,
@@ -416,8 +417,8 @@ export default function ProductsPage() {
               <ModalBody>
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="md:w-1/2">
-                    <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200">
-                      <img src={quickViewProduct.image} alt={quickViewProduct.name} className="w-full h-full object-cover" />
+                    <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200 relative">
+                      <Image src={quickViewProduct.image} alt={quickViewProduct.name} fill className="object-cover" />
                     </div>
                   </div>
                   <div className="md:w-1/2 flex flex-col">
@@ -488,8 +489,8 @@ export default function ProductsPage() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium">{item.name}</h4>
@@ -541,7 +542,7 @@ function ProductGridCard({ product, index, onAddToCart, onQuickView }: ProductGr
     <article className="group animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
       <Link href={`/products/${product.id}`} className="block">
         <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-cream-200 mb-4">
-          <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
+          <Image src={product.image} alt={product.name} fill className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
           {product.badge && (
             <div className="absolute top-3 left-3">
               <Badge variant={product.badge === 'Sale' ? 'warning' : product.badge === 'New Display' ? 'info' : 'botanical'} size="sm">{product.badge}</Badge>

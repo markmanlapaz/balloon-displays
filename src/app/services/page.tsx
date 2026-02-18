@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   Search,
@@ -118,11 +119,12 @@ export default function ServicesPage() {
               <Card key={service.id} variant="elevated" className="overflow-hidden animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="flex flex-col lg:flex-row">
                   {/* Image */}
-                  <div className="lg:w-2/5 aspect-video lg:aspect-auto overflow-hidden">
-                    <img
+                  <div className="lg:w-2/5 aspect-video lg:aspect-auto overflow-hidden relative">
+                    <Image
                       src={service.image}
                       alt={service.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
 
@@ -266,8 +268,8 @@ export default function ServicesPage() {
               </ModalHeader>
               <ModalBody>
                 <div className="space-y-6">
-                  <div className="aspect-video rounded-xl overflow-hidden bg-cream-200">
-                    <img src={selectedService.image} alt={selectedService.name} className="w-full h-full object-cover" />
+                  <div className="aspect-video rounded-xl overflow-hidden bg-cream-200 relative">
+                    <Image src={selectedService.image} alt={selectedService.name} fill className="object-cover" />
                   </div>
 
                   <p className="text-charcoal-500 leading-relaxed">{selectedService.longDescription}</p>
@@ -391,8 +393,8 @@ export default function ServicesPage() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium">{item.name}</h4>

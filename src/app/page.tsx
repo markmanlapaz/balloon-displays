@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   Search,
@@ -269,10 +270,12 @@ export default function BalloonDisplaysHome() {
             {/* Hero Image */}
             <div className="relative animate-fade-in-up" style={{ animationDelay: '200ms' }}>
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
-                <img
+                <Image
                   src="/images/single-balloon-arch-hero.webp"
                   alt="Beautiful balloon arch decoration"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 to-transparent" />
               </div>
@@ -380,11 +383,12 @@ export default function BalloonDisplaysHome() {
             {services.map((service) => (
               <Card key={service.id} variant="elevated" className="group overflow-hidden" hoverable>
                 <div className="flex flex-col md:flex-row">
-                  <div className="md:w-2/5 aspect-video md:aspect-auto overflow-hidden">
-                    <img
+                  <div className="md:w-2/5 aspect-video md:aspect-auto overflow-hidden relative">
+                    <Image
                       src={service.image}
                       alt={service.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                   <CardContent className="flex-1 flex flex-col justify-center p-6">
@@ -826,8 +830,8 @@ export default function BalloonDisplaysHome() {
               <ModalBody>
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="md:w-1/2">
-                    <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200">
-                      <img src={quickViewProduct.image} alt={quickViewProduct.name} className="w-full h-full object-cover" />
+                    <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200 relative">
+                      <Image src={quickViewProduct.image} alt={quickViewProduct.name} fill className="object-cover" />
                     </div>
                   </div>
                   <div className="md:w-1/2 flex flex-col">
@@ -913,11 +917,12 @@ export default function BalloonDisplaysHome() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image
                         src={item.image}
                         alt={item.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                     <div className="flex-1">

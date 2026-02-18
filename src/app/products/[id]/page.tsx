@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import {
   Home,
@@ -177,16 +178,16 @@ export default function ProductDetailPage() {
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Images */}
             <div className="space-y-4">
-              <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-cream-200">
-                <img src={product.images[selectedImage] || product.image} alt={product.name} className="w-full h-full object-cover" />
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-cream-200 relative">
+                <Image src={product.images[selectedImage] || product.image} alt={product.name} fill className="object-cover" priority />
               </div>
               {product.images.length > 1 && (
                 <div className="flex gap-3">
                   {product.images.map((img, i) => (
                     <button key={i} onClick={() => setSelectedImage(i)}
-                      className={cn('w-20 h-20 rounded-lg overflow-hidden border-2 transition-all',
+                      className={cn('w-20 h-20 rounded-lg overflow-hidden border-2 transition-all relative',
                         selectedImage === i ? 'border-botanical-700 ring-2 ring-botanical-200' : 'border-transparent hover:border-cream-400')}>
-                      <img src={img} alt={`${product.name} view ${i + 1}`} className="w-full h-full object-cover" />
+                      <Image src={img} alt={`${product.name} view ${i + 1}`} fill className="object-cover" />
                     </button>
                   ))}
                 </div>
@@ -385,8 +386,8 @@ export default function ProductDetailPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {suggestedProducts.map((p) => (
               <Link key={p.id} href={`/products/${p.id}`} className="group">
-                <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200 mb-3">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="aspect-[4/5] rounded-xl overflow-hidden bg-cream-200 mb-3 relative">
+                  <Image src={p.image} alt={p.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <h3 className="font-body font-medium text-charcoal-700 group-hover:text-botanical-700 transition-colors">{p.name}</h3>
                 <span className="font-body font-semibold text-sm text-charcoal-700">{formatPrice(p.price)}</span>
@@ -518,8 +519,8 @@ export default function ProductDetailPage() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium text-sm">{item.name}</h4>

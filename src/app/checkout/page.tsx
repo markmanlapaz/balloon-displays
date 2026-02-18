@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   Search,
@@ -142,8 +143,8 @@ export default function CheckoutPage() {
                     <div className="space-y-4">
                       {cart.items.map((item) => (
                         <div key={item.id} className="flex gap-4 p-4 rounded-xl bg-cream-50 border border-cream-200">
-                          <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                            <Image src={item.image} alt={item.name} fill className="object-cover" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-3">

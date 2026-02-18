@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   Search,
@@ -97,10 +98,11 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="animate-fade-in-up">
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-                <img
+                <Image
                   src="/images/single-balloon-arch-hero.webp"
                   alt="Our team setting up a beautiful balloon display"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 to-transparent" />
               </div>
@@ -319,8 +321,8 @@ export default function AboutPage() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium">{item.name}</h4>

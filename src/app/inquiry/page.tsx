@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   Search,
@@ -216,8 +217,8 @@ export default function InquiryPage() {
                         <div className="space-y-3 mb-4">
                           {cart.items.map((item) => (
                             <div key={item.id} className="flex items-center gap-3">
-                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                                <Image src={item.image} alt={item.name} fill className="object-cover" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-charcoal-700 truncate">{item.name}</p>
@@ -324,8 +325,8 @@ export default function InquiryPage() {
               <div className="space-y-4">
                 {cart.items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <div className="w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0 relative">
+                      <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-medium">{item.name}</h4>
